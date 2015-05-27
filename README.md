@@ -546,20 +546,20 @@ If the API returns data wrapped in a *root* element based on the model name.
 ```ruby
 class User
   include Her::Model
-  parse_root_in_json true
+  parse_root_in_json :person
 end
 
 class Article
   include Her::Model
-  parse_root_in_json :post
+  parse_root_in_json true
 end
 
 user = User.create(fullname: "Tobias Fünke")
-# POST "/users" with `fullname=Tobias+Fünke`, response is { "user": { "fullname": "Tobias Fünke" } }
+# POST "/users" with `fullname=Tobias+Fünke`, response is { "person": { "fullname": "Tobias Fünke" } }
 user.fullname # => "Tobias Fünke"
 
 article = Article.create(title: "Hello world.")
-# POST "/articles" with `title=Hello+world.`, response is { "post": { "title": "Hello world." } }
+# POST "/articles" with `title=Hello+world.`, response is { "article": { "title": "Hello world." } }
 article.title # => "Hello world."
 ```
 
