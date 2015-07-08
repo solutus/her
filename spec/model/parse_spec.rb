@@ -342,4 +342,32 @@ describe Her::Model::Parse do
       expect(user.to_params).to eql(:user => {:first_name => 'Someone'})
     end
   end
+
+  context "when parse_root_in_json is set" do
+    before do
+      Her::API.setup :url => "https://api.example.com" do |builder|
+        builder.use Her::Middleware::FirstLevelParseJSON
+        builder.use Faraday::Request::UrlEncoded
+      end
+    end
+
+    context 'when path contains unicode symbols' do
+      before do
+        Her::API.default_api.connection.adapter :test do |stub|
+          stub.get(URI.encode("/users/ユーザー")) do |env|
+            [200, {}, { :user => { :id => "ユーザー", :fullname => "松本行弘" } }.to_json]
+          end
+        end
+
+        spawn_model("Foo::User") do
+          parse_root_in_json true
+        end
+      end
+
+      it 'only sends the attributes that were modified' do
+        user = Foo::User.find "ユーザー"
+        expect(user.fullname).to eql("松本行弘")
+      end
+    end
+  end
 end

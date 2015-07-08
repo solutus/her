@@ -88,7 +88,7 @@ module Her
     # @private
     def request(opts={})
       method = opts.delete(:_method)
-      path = opts.delete(:_path)
+      path = URI.encode opts.delete(:_path)
       headers = opts.delete(:_headers)
       opts.delete_if { |key, value| key.to_s =~ /^_/ } # Remove all internal parameters
       response = @connection.send method do |request|
