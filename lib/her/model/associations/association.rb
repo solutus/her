@@ -29,7 +29,7 @@ module Her
           if data[data_key].kind_of?(klass)
             { association[:name] => data[data_key] }
           else
-            { association[:name] => klass.new(data[data_key]) }
+            { association[:name] => klass.new(klass.parse(data[data_key])) }
           end
         end
 
@@ -94,7 +94,7 @@ module Her
         def find(id)
           return nil if id.blank?
           path = build_association_path lambda { "#{@parent.request_path(@params)}#{@opts[:path]}/#{id}" }
-          @klass.get(path, @params)
+          @klass.get_resource(path, @params)
         end
 
       end

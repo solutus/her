@@ -1,6 +1,26 @@
 # Upgrade Her
 
-Here is a list of backward-incompatible changes that were introduced while Her is pre-1.0. After reaching 1.0, it will follow the [Semantic Versioning](http://semver.org/) system.
+Here is a list of notable changes by release. Her follows the [Semantic Versioning](http://semver.org/) system.
+
+## 0.8.1 (Note: 0.8.0 yanked)
+
+- Initial support for JSONAPI [link](https://github.com/remiprev/her/pull/347)
+- Fix for has_one association parsing [link](https://github.com/remiprev/her/pull/352)
+- Fix for escaping path variables HT @marshall-lee [link](https://github.com/remiprev/her/pull/354)
+- Fix syntax highlighting in README HT @tippenein [link](https://github.com/remiprev/her/pull/356)
+- Fix associations with Active Model Serializers HT @minktom [link](https://github.com/remiprev/her/pull/359)
+
+## 0.7.6
+
+- Loosen restrictions on ActiveSupport and ActiveModel to accommodate security fixes [link](https://github.com/remiprev/her/commit/8ff641fcdaf14be7cc9b1a6ee6654f27f7dfa34c)
+
+## 0.7.5
+
+- Performance fix for responses with large number of objects [link](https://github.com/remiprev/her/pull/337)
+- Bugfix for dirty attributes [link](https://github.com/remiprev/her/commit/70285debc6837a33a3a750c7c4a7251439464b42)
+- Add ruby 2.1 and 2.2 to travis test run. We will likely be removing official 1.9.x support in the near future, and 
+will begin to align our support with the official ruby maintenance schedule. 
+- README updates
 
 ## 0.6
 

@@ -8,7 +8,7 @@ module Her
           names.each do |name|
             module_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{name}(*args, &block)
-                #{target_name}.#{name}(*args, &block)
+                #{target_name}.send(#{name.inspect}, *args, &block)
               end
             RUBY
           end
@@ -33,8 +33,7 @@ module Her
           end
 
           # create a proxy to the fetched object's method
-          metaclass = (class << self; self; end)
-          metaclass.install_proxy_methods 'association.fetch', name
+          AssociationProxy.install_proxy_methods 'association.fetch', name
 
           # resend message to fetched object
           __send__(name, *args, &block)

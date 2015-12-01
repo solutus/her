@@ -49,10 +49,12 @@ describe Her::Model::ORM do
     it "handles new resource" do
       @new_user = Foo::User.new(:fullname => "Tobias Fünke")
       @new_user.new?.should be_truthy
+      @new_user.new_record?.should be_truthy
       @new_user.fullname.should == "Tobias Fünke"
 
       @existing_user = Foo::User.find(1)
       @existing_user.new?.should be_falsey
+      @existing_user.new_record?.should be_falsey
     end
 
     it 'handles new resource with custom primary key' do
@@ -410,6 +412,31 @@ describe Her::Model::ORM do
       @user.destroy
       @user.active.should be_falsey
       @user.should be_destroyed
+    end
+
+    context "with params" do
+      before do
+        Her::API.setup :url => "https://api.example.com" do |builder|
+          builder.use Her::Middleware::FirstLevelParseJSON
+          builder.use Faraday::Request::UrlEncoded
+          builder.adapter :test do |stub|
+            stub.delete("/users/1?delete_type=soft") { |env| [200, {}, { :id => 1, :fullname => "Lindsay Fünke", :active => false }.to_json] }
+          end
+        end
+      end
+
+      it "handle resource deletion through the .destroy class method" do
+        @user = Foo::User.destroy_existing(1, delete_type: 'soft')
+        @user.active.should be_false
+        @user.should be_destroyed
+      end
+
+      it "handle resource deletion through #destroy on an existing resource" do
+        @user = Foo::User.find(1)
+        @user.destroy(delete_type: 'soft')
+        @user.active.should be_false
+        @user.should be_destroyed
+      end
     end
   end
 
